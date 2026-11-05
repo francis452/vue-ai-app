@@ -17,8 +17,7 @@ onMounted(() => {
       <p class="eyebrow">Vue Router + Pinia ready</p>
       <h1>{{ appName }}</h1>
       <p class="intro">
-        这是项目首页。路由已经挂载，Pinia 也已经接入，可以继续添加页面、
-        全局状态和业务模块。
+        这是项目首页。路由已经挂载，Pinia 也已经接入，可以继续添加页面、 全局状态和业务模块。
       </p>
       <div class="status-row">
         <span>当前路由：/</span>
