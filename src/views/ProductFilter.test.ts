@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { NSelect } from 'naive-ui'
 import type { Product } from '../data/products'
 import ProductFilter from './ProductFilter.vue'
 
@@ -53,9 +54,14 @@ describe('ProductFilter', () => {
     ['#max-price', '20', ['耳机收纳袋']],
   ])('支持单条件查询 %s', async (selector, value, names) => {
     const wrapper = mountCatalog()
-    await wrapper.get(selector).setValue(value)
+    if (selector === '#category') {
+      wrapper.getComponent(NSelect).vm.$emit('update:value', value)
+    } else {
+      await wrapper.get(selector).setValue(value)
+    }
     expect(wrapper.findAll('tbody tr')).toHaveLength(4)
     await wrapper.get('form').trigger('submit')
+    await flushPromises()
     expect(wrapper.findAll('.product-name').map(cell => cell.text())).toEqual(names)
     expect(wrapper.get('[role="status"]').text()).toContain(`共 ${names.length} 件商品`)
   })
@@ -63,16 +69,18 @@ describe('ProductFilter', () => {
   it('组合条件同时生效，包含价格边界，重置恢复全部结果', async () => {
     const wrapper = mountCatalog()
     await wrapper.get('#keyword').setValue('耳机')
-    await wrapper.get('#category').setValue('数码')
+    wrapper.getComponent(NSelect).vm.$emit('update:value', '数码')
     await wrapper.get('#min-price').setValue('100')
     await wrapper.get('#max-price').setValue('200')
     await wrapper.get('form').trigger('submit')
+    await flushPromises()
     expect(wrapper.findAll('.product-name').map(cell => cell.text())).toEqual(['USB 耳机', '无线耳机'])
 
     await wrapper.get('form').trigger('reset')
     expect(wrapper.findAll('tbody tr')).toHaveLength(4)
-    for (const selector of ['#keyword', '#category', '#min-price', '#max-price']) {
-      expect((wrapper.get(selector).element as HTMLInputElement | HTMLSelectElement).value).toBe('')
+    expect(wrapper.getComponent(NSelect).props('value')).toBe('')
+    for (const selector of ['#keyword', '#min-price', '#max-price']) {
+      expect((wrapper.get(selector).element as HTMLInputElement).value).toBe('')
     }
   })
 
@@ -86,6 +94,7 @@ describe('ProductFilter', () => {
     await wrapper.get('#min-price').setValue(min)
     await wrapper.get('#max-price').setValue(max)
     await wrapper.get('form').trigger('submit')
+    await flushPromises()
     expect(wrapper.get('[role="alert"]').text()).toContain(message)
     expect(wrapper.findAll('tbody tr')).toHaveLength(4)
     await wrapper.get('form').trigger('reset')
@@ -96,6 +105,7 @@ describe('ProductFilter', () => {
     const wrapper = mountCatalog()
     await wrapper.get('#keyword').setValue('不存在的商品')
     await wrapper.get('form').trigger('submit')
+    await flushPromises()
     expect(wrapper.get('[role="status"]').text()).toContain('共 0 件商品')
     expect(wrapper.text()).toContain('没有符合条件的商品')
     expect(wrapper.find('table').exists()).toBe(false)
@@ -103,6 +113,7 @@ describe('ProductFilter', () => {
     await wrapper.get('#min-price').setValue('0')
     await wrapper.get('#max-price').setValue('100')
     await wrapper.get('form').trigger('submit')
+    await flushPromises()
     expect(wrapper.findAll('tbody tr')).toHaveLength(3)
   })
 
@@ -110,16 +121,19 @@ describe('ProductFilter', () => {
     const wrapper = mountCatalog(document.body)
     await wrapper.get('#keyword').setValue('USB')
     await wrapper.get('form').trigger('submit')
+    await flushPromises()
     expect(wrapper.findAll('tbody tr')).toHaveLength(1)
 
     await wrapper.get('#min-price').setValue('-1')
     await wrapper.get('form').trigger('submit')
+    await flushPromises()
     expect(wrapper.findAll('.product-name').map(cell => cell.text())).toEqual(['USB 耳机'])
     expect(document.activeElement).toBe(wrapper.get('[role="alert"]').element)
 
     await wrapper.get('#min-price').setValue('100')
     await wrapper.get('#max-price').setValue('100')
     await wrapper.get('form').trigger('submit')
+    await flushPromises()
     expect(wrapper.find('[role="alert"]').exists()).toBe(false)
     expect(wrapper.findAll('tbody tr')).toHaveLength(1)
   })

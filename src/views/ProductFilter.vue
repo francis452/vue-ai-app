@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, reactive, ref } from 'vue'
+import { NButton, NCard, NForm, NFormItem, NInput, NSelect } from 'naive-ui'
+import type { FormInst, FormRules } from 'naive-ui'
 import { products } from '../data/products'
 
 const emptyFilters = () => ({ keyword: '', category: '', minPrice: '', maxPrice: '' })
@@ -7,7 +9,11 @@ const filters = reactive(emptyFilters())
 const appliedFilters = ref(emptyFilters())
 const error = ref('')
 const errorElement = ref<HTMLElement | null>(null)
-const categories = [...new Set(products.map(product => product.category))]
+const form = ref<FormInst | null>(null)
+const categories = [
+  { label: '全部分类', value: '' },
+  ...[...new Set(products.map(product => product.category))].map(category => ({ label: category, value: category })),
+]
 const filteredProducts = computed(() => {
   const { keyword, category, minPrice, maxPrice } = appliedFilters.value
   return products.filter(product =>
@@ -18,19 +24,31 @@ const filteredProducts = computed(() => {
   )
 })
 
-async function search() {
+function priceError() {
   const prices = [filters.minPrice.trim(), filters.maxPrice.trim()]
-  error.value = prices.some(price => price !== ''
+  return prices.some(price => price !== ''
     && (!/^\d+(\.\d+)?$/.test(price) || !Number.isFinite(Number(price))))
     ? '价格请输入大于或等于 0 的有效数字。'
     : prices[0] && prices[1] && Number(prices[0]) > Number(prices[1])
       ? '最低价不能大于最高价。'
       : ''
-  if (error.value) {
+}
+
+const rules: FormRules = Object.fromEntries(['minPrice', 'maxPrice'].map(path => [path, {
+  trigger: 'submit',
+  validator: () => priceError() ? new Error(priceError()) : true,
+}]))
+
+async function search() {
+  try {
+    await form.value?.validate()
+  } catch {
+    error.value = priceError()
     await nextTick()
     errorElement.value?.focus()
     return
   }
+  error.value = ''
   appliedFilters.value = { ...filters }
 }
 
@@ -38,6 +56,7 @@ function reset() {
   Object.assign(filters, emptyFilters())
   appliedFilters.value = emptyFilters()
   error.value = ''
+  form.value?.restoreValidation()
 }
 
 const currency = new Intl.NumberFormat('zh-CN', {
@@ -53,38 +72,31 @@ const currency = new Intl.NumberFormat('zh-CN', {
       <p>按条件查找所需商品。</p>
     </header>
 
-    <section class="panel" aria-labelledby="filter-heading">
-      <h2 id="filter-heading">筛选条件</h2>
-      <form @submit.prevent="search" @reset.prevent="reset">
+    <NCard class="panel" tag="section" aria-labelledby="filter-heading">
+      <template #header><h2 id="filter-heading">筛选条件</h2></template>
+      <NForm ref="form" :model="filters" :rules="rules" label-placement="top" @submit.prevent="search" @reset.prevent="reset">
         <div class="filter-fields">
-          <div class="field">
-            <label for="keyword">商品名称</label>
-            <input id="keyword" v-model="filters.keyword" type="search" placeholder="输入关键词" />
-          </div>
-          <div class="field">
-            <label for="category">商品分类</label>
-            <select id="category" v-model="filters.category">
-              <option value="">全部分类</option>
-              <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="min-price">最低价（元）</label>
-            <input id="min-price" v-model="filters.minPrice" inputmode="decimal" aria-describedby="price-help" />
-          </div>
-          <div class="field">
-            <label for="max-price">最高价（元）</label>
-            <input id="max-price" v-model="filters.maxPrice" inputmode="decimal" aria-describedby="price-help" />
-          </div>
+          <NFormItem label="商品名称" label-for="keyword" path="keyword">
+            <NInput v-model:value="filters.keyword" :input-props="{ id: 'keyword' }" placeholder="输入关键词" />
+          </NFormItem>
+          <NFormItem label="商品分类" path="category">
+            <NSelect v-model:value="filters.category" :options="categories" aria-label="商品分类" />
+          </NFormItem>
+          <NFormItem label="最低价（元）" label-for="min-price" path="minPrice">
+            <NInput v-model:value="filters.minPrice" :input-props="{ id: 'min-price', inputmode: 'decimal', 'aria-describedby': 'price-help' }" placeholder="不限" />
+          </NFormItem>
+          <NFormItem label="最高价（元）" label-for="max-price" path="maxPrice">
+            <NInput v-model:value="filters.maxPrice" :input-props="{ id: 'max-price', inputmode: 'decimal', 'aria-describedby': 'price-help' }" placeholder="不限" />
+          </NFormItem>
         </div>
         <p id="price-help" class="form-help">价格范围包含最低价和最高价，留空表示不限。</p>
         <p v-if="error" ref="errorElement" class="form-error" role="alert" tabindex="-1">{{ error }}</p>
         <div class="actions">
-          <button type="submit">查询</button>
-          <button type="reset">重置</button>
+          <NButton type="primary" attr-type="submit">查询</NButton>
+          <NButton attr-type="reset">重置</NButton>
         </div>
-      </form>
-    </section>
+      </NForm>
+    </NCard>
 
     <section class="panel" aria-labelledby="results-heading">
       <h2 id="results-heading">商品列表</h2>
