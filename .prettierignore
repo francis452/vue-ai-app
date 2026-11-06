@@ -1,8 +1,0 @@
-node_modules/
-dist/
-coverage/
-pnpm-lock.yaml
-public/
-src/assets/
-# Unused scaffold component; keep its existing formatting.
-src/components/HelloWorld.vue

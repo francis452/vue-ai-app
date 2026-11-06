@@ -22,9 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Test reports and environment secrets
-coverage/
-.env
-.env.*
-!.env.example
