@@ -37,6 +37,16 @@ describe('ProductFilter', () => {
     expect(wrapper.find('table').exists()).toBe(false)
   })
 
+  it('标签关联输入框，并保留查询及重置按钮语义', () => {
+    const wrapper = mount(ProductFilter)
+    for (const [id, label] of [['keyword', '商品名称'], ['min-price', '最低价（元）'], ['max-price', '最高价（元）']]) {
+      expect(wrapper.get(`label[for="${id}"]`).text()).toBe(label)
+      expect(wrapper.get(`#${id}`).element.tagName).toBe('INPUT')
+    }
+    expect(wrapper.get('button[type="submit"]').text()).toBe('查询')
+    expect(wrapper.get('button[type="reset"]').text()).toBe('重置')
+  })
+
   function mountCatalog(attachTo?: HTMLElement) {
     products.push(
       { id: 1, name: 'USB 耳机', category: '数码', price: 100 },
@@ -62,7 +72,7 @@ describe('ProductFilter', () => {
     expect(wrapper.findAll('tbody tr')).toHaveLength(4)
     await wrapper.get('form').trigger('submit')
     await flushPromises()
-    expect(wrapper.findAll('tbody .product-name').map(cell => cell.text())).toEqual(names)
+    expect(wrapper.findAll('tbody tr td:first-child').map(cell => cell.text())).toEqual(names)
     expect(wrapper.get('[role="status"]').text()).toContain(`共 ${names.length} 件商品`)
   })
 
@@ -74,7 +84,7 @@ describe('ProductFilter', () => {
     await wrapper.get('#max-price').setValue('200')
     await wrapper.get('form').trigger('submit')
     await flushPromises()
-    expect(wrapper.findAll('tbody .product-name').map(cell => cell.text())).toEqual(['USB 耳机', '无线耳机'])
+    expect(wrapper.findAll('tbody tr td:first-child').map(cell => cell.text())).toEqual(['USB 耳机', '无线耳机'])
 
     await wrapper.get('form').trigger('reset')
     expect(wrapper.findAll('tbody tr')).toHaveLength(4)
@@ -127,7 +137,7 @@ describe('ProductFilter', () => {
     await wrapper.get('#min-price').setValue('-1')
     await wrapper.get('form').trigger('submit')
     await flushPromises()
-    expect(wrapper.findAll('tbody .product-name').map(cell => cell.text())).toEqual(['USB 耳机'])
+    expect(wrapper.findAll('tbody tr td:first-child').map(cell => cell.text())).toEqual(['USB 耳机'])
     expect(document.activeElement).toBe(wrapper.get('[role="alert"]').element)
 
     await wrapper.get('#min-price').setValue('100')
@@ -136,5 +146,23 @@ describe('ProductFilter', () => {
     await flushPromises()
     expect(wrapper.find('[role="alert"]').exists()).toBe(false)
     expect(wrapper.findAll('tbody tr')).toHaveLength(1)
+  })
+
+  it('小数价格相等时包含边界，空白条件表示不限', async () => {
+    products.push({ id: 1, name: '保温杯', category: '家居', price: 79.9 })
+    const wrapper = mount(ProductFilter)
+    await wrapper.get('#min-price').setValue('79.9')
+    await wrapper.get('#max-price').setValue('79.90')
+    await wrapper.get('form').trigger('submit')
+    await flushPromises()
+    expect(wrapper.findAll('tbody tr')).toHaveLength(1)
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+
+    await wrapper.get('#min-price').setValue(' ')
+    await wrapper.get('#max-price').setValue(' ')
+    await wrapper.get('form').trigger('submit')
+    await flushPromises()
+    expect(wrapper.findAll('tbody tr')).toHaveLength(1)
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
   })
 })
