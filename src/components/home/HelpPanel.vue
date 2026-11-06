@@ -12,7 +12,7 @@ const selected = ref<typeof helpDocuments[number] | null>(null)
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       <ul v-for="group in 3" :key="group" class="m-0 list-none space-y-1 rounded-lg bg-blue-500/5 p-3" :aria-label="`新手文档第 ${group} 组`">
         <li v-for="document in helpDocuments" :key="document.id">
-          <button type="button" class="min-h-8 w-full rounded-sm text-left text-xs leading-5 text-inherit wrap-anywhere hover:text-blue-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" @click="selected = document">{{ document.title }}</button>
+          <button type="button" class="min-h-11 w-full rounded-sm text-left text-xs leading-5 text-inherit wrap-anywhere hover:text-blue-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:hover:text-blue-200 dark:focus-visible:outline-blue-300 md:min-h-8" @click="selected = document">{{ document.title }}</button>
         </li>
       </ul>
     </div>

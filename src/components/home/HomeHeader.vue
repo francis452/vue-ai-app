@@ -29,7 +29,7 @@ async function toggleFullscreen() {
 </script>
 
 <template>
-  <header class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-blue-400/10 px-4 py-2 sm:px-5" aria-label="系统顶部栏">
+  <header class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-1 sm:px-5" aria-label="系统顶部栏">
     <div class="flex min-w-0 items-center gap-2">
       <span class="relative inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-cyan-300 via-blue-500 to-indigo-500 shadow-sm" aria-hidden="true">
         <span class="size-4 rounded-full border-2 border-white/70 bg-blue-100"></span>

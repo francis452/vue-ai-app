@@ -8,22 +8,23 @@ const dialog = ref<'profile' | 'contact' | null>(null)
 </script>
 
 <template>
-  <aside class="flex h-full min-w-0 flex-col gap-4" aria-label="用户与服务">
-    <NCard tag="section" aria-labelledby="profile-heading">
+  <aside class="flex h-full min-w-0 flex-col gap-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:grid lg:grid-rows-subgrid" aria-label="用户与服务">
+    <div class="flex min-w-0 flex-col gap-4">
+    <NCard tag="section" size="small" aria-labelledby="profile-heading">
       <div class="flex flex-wrap items-center gap-3">
         <NAvatar round :size="36" class="shrink-0 bg-conic! from-blue-500 via-blue-100 to-indigo-400" aria-hidden="true" />
         <div class="min-w-0 flex-1">
           <h2 id="profile-heading" class="m-0 text-sm font-semibold text-inherit">{{ homeProfile.name }}</h2>
           <p class="mt-1 text-xs opacity-70">ID：{{ homeProfile.id }}</p>
         </div>
-        <NButton size="small" type="primary" @click="dialog = 'profile'">个人信息</NButton>
+        <NButton type="primary" @click="dialog = 'profile'">个人信息</NButton>
       </div>
     </NCard>
 
     <NCard tag="section" class="flex-1" content-class="flex flex-col h-full" aria-labelledby="work-orders-heading">
       <h2 id="work-orders-heading" class="m-0 text-sm font-semibold text-inherit">我的工单</h2>
       <div class="flex min-h-60 flex-1 items-center justify-center py-8 lg:min-h-96">
-        <NEmpty description="暂无我的工单">
+        <NEmpty description="暂无我的工单" :theme-overrides="{ iconSizeMedium: '72px' }">
           <template #icon>
             <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
               <path d="M17 12h44v59H17z" fill="#dbeafe" stroke="#94a3b8" stroke-width="2" />
@@ -37,13 +38,14 @@ const dialog = ref<'profile' | 'contact' | null>(null)
         </NEmpty>
       </div>
     </NCard>
+    </div>
 
     <NCard tag="section" class="relative isolate overflow-hidden" aria-labelledby="contact-heading">
       <img :src="contactIllustration" alt="" class="pointer-events-none absolute right-0 bottom-0 -z-10 h-36 w-40 opacity-65" />
       <div class="min-h-32">
         <h2 id="contact-heading" class="m-0 text-base font-semibold text-inherit">{{ homeContact.title }}</h2>
         <p class="mt-2 max-w-48 text-xs leading-5">{{ homeContact.description }}</p>
-        <NButton type="primary" size="small" class="mt-6" @click="dialog = 'contact'">联系我们</NButton>
+        <NButton type="primary" class="mt-6" @click="dialog = 'contact'">联系我们</NButton>
       </div>
     </NCard>
 
