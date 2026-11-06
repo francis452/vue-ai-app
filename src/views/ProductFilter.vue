@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, nextTick, reactive, ref } from 'vue'
-import { NButton, NCard, NForm, NFormItem, NInput, NSelect } from 'naive-ui'
-import type { FormInst, FormRules } from 'naive-ui'
+import { NAlert, NButton, NCard, NDataTable, NEmpty, NForm, NFormItem, NInput, NSelect } from 'naive-ui'
+import type { DataTableColumns, FormInst, FormRules } from 'naive-ui'
 import { products } from '../data/products'
+import type { Product } from '../data/products'
 
 const emptyFilters = () => ({ keyword: '', category: '', minPrice: '', maxPrice: '' })
 const filters = reactive(emptyFilters())
@@ -63,6 +64,11 @@ const currency = new Intl.NumberFormat('zh-CN', {
   style: 'currency',
   currency: 'CNY',
 })
+const columns: DataTableColumns<Product> = [
+  { title: '商品名称', key: 'name', className: 'product-name', minWidth: 140 },
+  { title: '分类', key: 'category', width: 90 },
+  { title: '价格（人民币）', key: 'price', width: 140, render: product => currency.format(product.price) },
+]
 </script>
 
 <template>
@@ -90,7 +96,9 @@ const currency = new Intl.NumberFormat('zh-CN', {
           </NFormItem>
         </div>
         <p id="price-help" class="form-help">价格范围包含最低价和最高价，留空表示不限。</p>
-        <p v-if="error" ref="errorElement" class="form-error" role="alert" tabindex="-1">{{ error }}</p>
+        <div v-if="error" ref="errorElement" class="form-error" role="alert" tabindex="-1">
+          <NAlert type="error" :show-icon="false">{{ error }}</NAlert>
+        </div>
         <div class="actions">
           <NButton type="primary" attr-type="submit">查询</NButton>
           <NButton attr-type="reset">重置</NButton>
@@ -98,30 +106,14 @@ const currency = new Intl.NumberFormat('zh-CN', {
       </NForm>
     </NCard>
 
-    <section class="panel" aria-labelledby="results-heading">
-      <h2 id="results-heading">商品列表</h2>
+    <NCard class="panel" tag="section" aria-labelledby="results-heading">
+      <template #header><h2 id="results-heading">商品列表</h2></template>
       <p role="status">本地演示数据 · 共 {{ filteredProducts.length }} 件商品</p>
       <div v-if="filteredProducts.length" class="table-container">
-        <table>
-          <caption class="table-caption">商品名称、分类与价格（人民币）</caption>
-          <thead>
-            <tr>
-              <th scope="col">商品名称</th>
-              <th scope="col">分类</th>
-              <th scope="col">价格</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="product in filteredProducts" :key="product.id">
-              <td class="product-name">{{ product.name }}</td>
-              <td>{{ product.category }}</td>
-              <td>{{ currency.format(product.price) }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <NDataTable :columns="columns" :data="filteredProducts" :row-key="(product: Product) => product.id" :pagination="false" :scroll-x="370" aria-label="商品名称、分类与价格（人民币）" />
       </div>
-      <p v-else class="empty-state">{{ products.length ? '没有符合条件的商品，请调整筛选条件或重置。' : '暂无商品' }}</p>
-    </section>
+      <NEmpty v-else class="empty-state" :description="products.length ? '没有符合条件的商品，请调整筛选条件或重置。' : '暂无商品'" />
+    </NCard>
   </main>
 </template>
 

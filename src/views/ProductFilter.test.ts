@@ -62,7 +62,7 @@ describe('ProductFilter', () => {
     expect(wrapper.findAll('tbody tr')).toHaveLength(4)
     await wrapper.get('form').trigger('submit')
     await flushPromises()
-    expect(wrapper.findAll('.product-name').map(cell => cell.text())).toEqual(names)
+    expect(wrapper.findAll('tbody .product-name').map(cell => cell.text())).toEqual(names)
     expect(wrapper.get('[role="status"]').text()).toContain(`共 ${names.length} 件商品`)
   })
 
@@ -74,7 +74,7 @@ describe('ProductFilter', () => {
     await wrapper.get('#max-price').setValue('200')
     await wrapper.get('form').trigger('submit')
     await flushPromises()
-    expect(wrapper.findAll('.product-name').map(cell => cell.text())).toEqual(['USB 耳机', '无线耳机'])
+    expect(wrapper.findAll('tbody .product-name').map(cell => cell.text())).toEqual(['USB 耳机', '无线耳机'])
 
     await wrapper.get('form').trigger('reset')
     expect(wrapper.findAll('tbody tr')).toHaveLength(4)
@@ -127,7 +127,7 @@ describe('ProductFilter', () => {
     await wrapper.get('#min-price').setValue('-1')
     await wrapper.get('form').trigger('submit')
     await flushPromises()
-    expect(wrapper.findAll('.product-name').map(cell => cell.text())).toEqual(['USB 耳机'])
+    expect(wrapper.findAll('tbody .product-name').map(cell => cell.text())).toEqual(['USB 耳机'])
     expect(document.activeElement).toBe(wrapper.get('[role="alert"]').element)
 
     await wrapper.get('#min-price').setValue('100')
