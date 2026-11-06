@@ -65,184 +65,54 @@ const currency = new Intl.NumberFormat('zh-CN', {
   currency: 'CNY',
 })
 const columns: DataTableColumns<Product> = [
-  { title: '商品名称', key: 'name', className: 'product-name', minWidth: 140 },
+  { title: '商品名称', key: 'name', className: 'product-name wrap-anywhere', minWidth: 140 },
   { title: '分类', key: 'category', width: 90 },
   { title: '价格（人民币）', key: 'price', width: 140, render: product => currency.format(product.price) },
 ]
 </script>
 
 <template>
-  <main class="product-filter">
+  <main class="mx-auto min-h-svh w-full max-w-6xl min-w-0 space-y-6 px-4 py-8 text-left sm:px-6">
     <header>
-      <h1>商品筛选</h1>
+      <h1 class="m-0 mb-3 text-3xl leading-tight font-semibold text-inherit">商品筛选</h1>
       <p>按条件查找所需商品。</p>
     </header>
 
-    <NCard class="panel" tag="section" aria-labelledby="filter-heading">
-      <template #header><h2 id="filter-heading">筛选条件</h2></template>
+    <NCard class="min-w-0" tag="section" aria-labelledby="filter-heading">
+      <template #header><h2 class="m-0 text-xl font-medium text-inherit" id="filter-heading">筛选条件</h2></template>
       <NForm ref="form" :model="filters" :rules="rules" label-placement="top" @submit.prevent="search" @reset.prevent="reset">
-        <div class="filter-fields">
-          <NFormItem label="商品名称" label-for="keyword" path="keyword">
+        <div class="grid grid-cols-1 gap-x-6 min-[601px]:grid-cols-2">
+          <NFormItem label="商品名称" :label-props="{ for: 'keyword' }" path="keyword">
             <NInput v-model:value="filters.keyword" :input-props="{ id: 'keyword' }" placeholder="输入关键词" />
           </NFormItem>
-          <NFormItem label="商品分类" path="category">
-            <NSelect v-model:value="filters.category" :options="categories" aria-label="商品分类" />
+          <NFormItem label="商品分类" :label-props="{ for: 'category' }" path="category">
+            <NSelect v-model:value="filters.category" :options="categories" :input-props="{ id: 'category', 'aria-label': '商品分类' }" />
           </NFormItem>
-          <NFormItem label="最低价（元）" label-for="min-price" path="minPrice">
+          <NFormItem label="最低价（元）" :label-props="{ for: 'min-price' }" path="minPrice">
             <NInput v-model:value="filters.minPrice" :input-props="{ id: 'min-price', inputmode: 'decimal', 'aria-describedby': 'price-help' }" placeholder="不限" />
           </NFormItem>
-          <NFormItem label="最高价（元）" label-for="max-price" path="maxPrice">
+          <NFormItem label="最高价（元）" :label-props="{ for: 'max-price' }" path="maxPrice">
             <NInput v-model:value="filters.maxPrice" :input-props="{ id: 'max-price', inputmode: 'decimal', 'aria-describedby': 'price-help' }" placeholder="不限" />
           </NFormItem>
         </div>
-        <p id="price-help" class="form-help">价格范围包含最低价和最高价，留空表示不限。</p>
-        <div v-if="error" ref="errorElement" class="form-error" role="alert" tabindex="-1">
+        <p id="price-help" class="mt-2 text-sm">价格范围包含最低价和最高价，留空表示不限。</p>
+        <div v-if="error" ref="errorElement" class="mt-4 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2" role="alert" tabindex="-1">
           <NAlert type="error" :show-icon="false">{{ error }}</NAlert>
         </div>
-        <div class="actions">
+        <div class="mt-4 flex flex-wrap gap-3">
           <NButton type="primary" attr-type="submit">查询</NButton>
           <NButton attr-type="reset">重置</NButton>
         </div>
       </NForm>
     </NCard>
 
-    <NCard class="panel" tag="section" aria-labelledby="results-heading">
-      <template #header><h2 id="results-heading">商品列表</h2></template>
+    <NCard class="min-w-0" tag="section" aria-labelledby="results-heading">
+      <template #header><h2 class="m-0 text-xl font-medium text-inherit" id="results-heading">商品列表</h2></template>
       <p role="status">本地演示数据 · 共 {{ filteredProducts.length }} 件商品</p>
-      <div v-if="filteredProducts.length" class="table-container">
+      <div v-if="filteredProducts.length" class="mt-4 min-w-0">
         <NDataTable :columns="columns" :data="filteredProducts" :row-key="(product: Product) => product.id" :pagination="false" :scroll-x="370" aria-label="商品名称、分类与价格（人民币）" />
       </div>
-      <NEmpty v-else class="empty-state" :description="products.length ? '没有符合条件的商品，请调整筛选条件或重置。' : '暂无商品'" />
+      <NEmpty v-else class="py-8" :description="products.length ? '没有符合条件的商品，请调整筛选条件或重置。' : '暂无商品'" />
     </NCard>
   </main>
 </template>
-
-<style scoped>
-.product-filter {
-  min-width: 0;
-  padding: 32px 20px;
-  text-align: left;
-}
-
-h1 {
-  margin: 0 0 12px;
-  font-size: 32px;
-  line-height: 1.3;
-}
-
-.panel {
-  margin-top: 24px;
-  padding: 24px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.table-container {
-  margin-top: 16px;
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table-caption {
-  text-align: left;
-  margin-bottom: 8px;
-}
-
-th,
-td {
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-
-td:not(.product-name) {
-  white-space: nowrap;
-}
-
-.product-name {
-  overflow-wrap: anywhere;
-}
-
-.empty-state {
-  margin-top: 16px;
-}
-
-.filter-fields {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-input,
-select,
-button {
-  box-sizing: border-box;
-  min-height: 44px;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font: inherit;
-  color: var(--text-h);
-  background: var(--bg);
-}
-
-input,
-select {
-  width: 100%;
-  min-width: 0;
-}
-
-button {
-  cursor: pointer;
-}
-
-:is(input, select, button):focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.form-help,
-.form-error,
-.actions {
-  margin-top: 16px;
-}
-
-.form-error {
-  color: var(--text-h);
-  border-left: 3px solid var(--accent);
-  padding-left: 12px;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-@media (max-width: 600px) {
-  .filter-fields {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .panel {
-    padding: 16px;
-  }
-
-  th,
-  td {
-    padding: 8px 4px;
-  }
-}
-</style>
