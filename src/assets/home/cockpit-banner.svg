@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" fill="none">
+  <defs>
+    <linearGradient id="sky" x2="1200" y2="120" gradientUnits="userSpaceOnUse"><stop stop-color="#8dbaff"/><stop offset=".45" stop-color="#dbeafe"/><stop offset="1" stop-color="#68c9ef"/></linearGradient>
+    <linearGradient id="tower" x2="0" y2="120" gradientUnits="userSpaceOnUse"><stop stop-color="#b9e5ff"/><stop offset="1" stop-color="#4778ef"/></linearGradient>
+    <pattern id="windows" width="12" height="14" patternUnits="userSpaceOnUse"><path d="M4 0v10" stroke="#deefff" stroke-width="3" opacity=".7"/></pattern>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1200v120H0z"/>
+  <path d="m0 100 190-110 150 85 160-92 180 104 175-100 180 104 165-92v121H0Z" fill="#fff" opacity=".2"/>
+  <path d="m0 100 210-120M110 120 320 0m490 120L1020 0m60 120 120-70" stroke="#fff" stroke-width="12" opacity=".16"/>
+  <g fill="url(#tower)" stroke="#a3ceff" stroke-width="1.5">
+    <path d="M80 120V45l30-18 36 19v74Z"/><path d="M166 120V-8l29-16 34 20v124Z"/><path d="M250 120V70l24-14 29 17v47Z"/>
+    <path d="M930 120V34l32-19 37 21v84Z"/><path d="M1016 120V-10l32-18 35 20v128Z"/><path d="M1115 120V68l25-15 30 17v50Z"/>
+  </g>
+  <g stroke="#e2f2ff" stroke-width="2" opacity=".8"><path d="m80 45 30 16 36-15m-36 15v59m56-128 29 18 34-14m-34 14v110m55-50 24 14 29-11m-29 11v36m656-86 32 18 37-16m-37 16v68m54-130 32 18 35-16m-35 16v112m67-52 25 15 30-13m-30 13v37"/></g>
+  <g fill="url(#windows)"><path d="M85 62h20v58H85zm86-43h19v101h-19zm764 38h22v63h-22zm87-43h21v106h-21z"/></g>
+  <path d="m28 82 20-10-6 14 10 6-24 12 6-14Zm307-48 18-10 19 10-19 11Zm463 43 22-13 24 13-24 13Z" fill="#e1f2ff" opacity=".7"/>
+</svg>

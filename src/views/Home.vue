@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { NCard, NEmpty } from 'naive-ui'
-import { businessApps, helpDocuments, homeContact, homeProfile, platformApps } from '../data/home'
+import { helpDocuments, homeContact, homeProfile } from '../data/home'
 import HomeHeader from '../components/home/HomeHeader.vue'
+import ApplicationPanel from '../components/home/ApplicationPanel.vue'
 
 defineOptions({ name: 'EnergyHome' })
 defineProps<{ dark: boolean }>()
@@ -24,23 +25,7 @@ const emit = defineEmits<{ 'update:dark': [value: boolean] }>()
 
       <div class="grid min-w-0 items-start gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)]">
         <div class="min-w-0 space-y-4">
-          <NCard tag="section" aria-labelledby="applications-heading">
-            <h2 id="applications-heading" class="m-0 mb-4 text-lg font-medium text-inherit">应用中心</h2>
-            <section class="rounded-lg bg-blue-500/10 p-4" aria-labelledby="cockpit-heading">
-              <h3 id="cockpit-heading" class="m-0 text-lg font-semibold">运营驾驶舱</h3>
-              <p class="mt-2 text-sm">数据一屏掌控 · 业务统一指挥 · 资源及时调度</p>
-            </section>
-
-            <section v-for="group in [{ id: 'business', title: '业务应用', entries: businessApps }, { id: 'platform', title: '数字底座', entries: platformApps }]" :key="group.id" class="mt-6" :aria-labelledby="`${group.id}-heading`">
-              <h3 :id="`${group.id}-heading`" class="m-0 mb-3 text-base font-medium">{{ group.title }}</h3>
-              <ul class="m-0 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 xl:grid-cols-4">
-                <li v-for="entry in group.entries" :key="entry.id" class="min-w-0 rounded-lg bg-blue-500/5 p-3">
-                  <p class="m-0 text-sm font-medium wrap-anywhere">{{ entry.title }}</p>
-                  <p class="mt-1 text-xs wrap-anywhere">{{ entry.description }}</p>
-                </li>
-              </ul>
-            </section>
-          </NCard>
+          <ApplicationPanel />
 
           <NCard tag="section" aria-labelledby="help-heading">
             <h2 id="help-heading" class="m-0 mb-4 text-lg font-medium text-inherit">新手文档</h2>
