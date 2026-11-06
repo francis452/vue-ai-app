@@ -18,8 +18,9 @@ const count = ref(0)
       <h1>Get started</h1>
       <p>Edit <code>src/App.vue</code> and save to test <code>HMR</code></p>
     </div>
+    <p v-if="count === 0">还没有点击</p>
     <button type="button" class="counter" @click="count++">
-      Count is {{ count }}
+      点击次数：{{ count }}
     </button>
   </section>
 
