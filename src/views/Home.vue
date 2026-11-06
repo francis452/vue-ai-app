@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { NConfigProvider } from 'naive-ui'
 import { homeProfile } from '../data/home'
 import HomeHeader from '../components/home/HomeHeader.vue'
 import ApplicationPanel from '../components/home/ApplicationPanel.vue'
@@ -7,11 +9,13 @@ import HelpPanel from '../components/home/HelpPanel.vue'
 import background from '../assets/home/background.svg'
 
 defineOptions({ name: 'EnergyHome' })
-defineProps<{ dark: boolean }>()
+const props = defineProps<{ dark: boolean }>()
 const emit = defineEmits<{ 'update:dark': [value: boolean] }>()
+const themeOverrides = computed(() => props.dark ? undefined : { Card: { color: '#ffffff' } })
 </script>
 
 <template>
+  <NConfigProvider abstract :theme-overrides="themeOverrides">
   <div class="relative isolate min-h-svh" :class="dark ? 'dark bg-[#101a30] text-slate-100' : 'bg-[#dce6fd] text-slate-800'">
     <img :src="background" alt="" class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[660px] w-full object-cover object-top opacity-80 dark:opacity-15" />
     <a href="#home-main" class="sr-only rounded-md bg-white p-3 text-blue-800 focus:not-sr-only focus:absolute focus:top-2 focus:left-4 focus:z-50">跳转到首页内容</a>
@@ -37,4 +41,5 @@ const emit = defineEmits<{ 'update:dark': [value: boolean] }>()
       </div>
     </main>
   </div>
+  </NConfigProvider>
 </template>

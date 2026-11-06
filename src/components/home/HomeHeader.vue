@@ -29,7 +29,7 @@ async function toggleFullscreen() {
 </script>
 
 <template>
-  <header class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-1 sm:px-5" aria-label="系统顶部栏">
+  <header class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 bg-white px-4 py-1 sm:px-5 dark:bg-[#1e2e4b]" aria-label="系统顶部栏">
     <div class="flex min-w-0 items-center gap-2">
       <span class="relative inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-cyan-300 via-blue-500 to-indigo-500 shadow-sm" aria-hidden="true">
         <span class="size-4 rounded-full border-2 border-white/70 bg-blue-100"></span>
@@ -38,7 +38,7 @@ async function toggleFullscreen() {
       <p class="m-0 text-base leading-snug font-semibold sm:text-lg">{{ homeProfile.systemName }}</p>
     </div>
 
-    <nav class="flex items-center gap-1 rounded-full bg-blue-100/20 px-2 py-1" aria-label="系统工具">
+    <nav class="flex items-center gap-1 rounded-full bg-white px-2 py-1 dark:bg-[#1e2e4b]" aria-label="系统工具">
       <NButton quaternary circle :disabled="!fullscreenSupported" :aria-label="fullscreen ? '退出全屏' : '进入全屏'" @click="toggleFullscreen">
         <template #icon>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
