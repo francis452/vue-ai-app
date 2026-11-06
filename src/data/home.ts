@@ -12,6 +12,7 @@ export const homeProfile = {
   lastLoginIp: 'XXX.XXXX',
   name: '咸菜超人',
   id: '78365494764',
+  notificationCount: 32,
 }
 
 export const businessApps: HomeEntry[] = [

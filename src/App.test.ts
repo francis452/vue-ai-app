@@ -34,4 +34,15 @@ describe('App 主题配置', () => {
     await nextTick()
     expect(provider.props('theme')).toBeNull()
   })
+
+  it('顶部栏切换主题后，采用用户选择的主题', async () => {
+    const wrapper = mount(App, { global: { stubs: { Home: true } } })
+    wrapper.findComponent({ name: 'Home' }).vm.$emit('update:dark', true)
+    await nextTick()
+    expect(wrapper.getComponent(NConfigProvider).props('theme')).toBe(darkTheme)
+    wrapper.findComponent({ name: 'Home' }).vm.$emit('update:dark', false)
+    osTheme.value = 'dark'
+    await nextTick()
+    expect(wrapper.getComponent(NConfigProvider).props('theme')).toBeNull()
+  })
 })
