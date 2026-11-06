@@ -13,8 +13,8 @@ const emit = defineEmits<{ select: [entry: HomeEntry] }>()
       </svg>
     </span>
     <span class="min-w-0">
-      <span class="block text-xs leading-4 font-semibold wrap-anywhere">{{ entry.title }}</span>
-      <span class="mt-1 block text-[11px] leading-4 opacity-80 wrap-anywhere">{{ entry.description }}</span>
+      <span class="block text-xs leading-4 font-semibold wrap-anywhere sm:whitespace-nowrap">{{ entry.title }}</span>
+      <span class="mt-1 block text-[11px] leading-4 opacity-80 wrap-anywhere sm:whitespace-nowrap">{{ entry.description }}</span>
     </span>
   </button>
 </template>

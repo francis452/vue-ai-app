@@ -29,7 +29,7 @@ const selected = ref<{ title: string; description: string } | null>(null)
 
     <section v-for="group in groups" :key="group.id" class="mt-6" :aria-labelledby="`${group.id}-heading`">
       <h3 :id="`${group.id}-heading`" class="m-0 mb-3 text-sm font-semibold">{{ group.title }}</h3>
-      <ul class="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 xl:grid-cols-4">
+      <ul class="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-4 p-0">
         <li v-for="entry in group.entries" :key="entry.id" class="min-w-0">
           <AppEntryCard :entry="entry" @select="selected = $event" />
         </li>
