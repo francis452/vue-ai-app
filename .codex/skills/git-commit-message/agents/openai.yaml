@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git 提交信息"
+  short_description: "根据实际变更生成符合 Angular 风格、包含中文标题和正文的提交信息"
+  default_prompt: "使用 $git-commit-message 根据当前代码变更生成包含标题和正文的中文提交信息。"
