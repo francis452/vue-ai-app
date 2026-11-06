@@ -41,9 +41,9 @@ export const platformApps: HomeEntry[] = [
 ]
 
 export const helpDocuments = [
-  { id: 'initial-password', title: '如何获取云服务器的初始密码？' },
-  { id: 'traffic-statistics', title: '为什么控制台用量统计中展示的流量数据与日志计算不同？' },
-  { id: 'password-help', title: '如何获取云服务器的初始密码？' },
+  { id: 'initial-password', title: '如何获取云服务器的初始密码？', content: '请在云服务器管理控制台的实例详情中查看密码相关说明；如无法获取，可按照服务商指引重置密码。' },
+  { id: 'traffic-statistics', title: '为什么控制台用量统计中展示的流量数据与日志计算不同？', content: '请核对统计时间范围、流量方向和计量单位，并检查日志是否完整。不同统计口径可能产生差异。' },
+  { id: 'password-help', title: '如何获取云服务器的初始密码？', content: '请通过服务商提供的安全渠道查看或重置密码，妥善保管登录凭据。' },
 ]
 
 export const homeContact = {

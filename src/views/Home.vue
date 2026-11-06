@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { NCard, NEmpty } from 'naive-ui'
-import { helpDocuments, homeContact, homeProfile } from '../data/home'
+import { homeProfile } from '../data/home'
 import HomeHeader from '../components/home/HomeHeader.vue'
 import ApplicationPanel from '../components/home/ApplicationPanel.vue'
+import HomeSidebar from '../components/home/HomeSidebar.vue'
+import HelpPanel from '../components/home/HelpPanel.vue'
 
 defineOptions({ name: 'EnergyHome' })
 defineProps<{ dark: boolean }>()
@@ -27,32 +28,10 @@ const emit = defineEmits<{ 'update:dark': [value: boolean] }>()
         <div class="min-w-0 space-y-4">
           <ApplicationPanel />
 
-          <NCard tag="section" aria-labelledby="help-heading">
-            <h2 id="help-heading" class="m-0 mb-4 text-lg font-medium text-inherit">新手文档</h2>
-            <ul class="m-0 list-disc space-y-2 pl-5 text-sm">
-              <li v-for="document in helpDocuments" :key="document.id">{{ document.title }}</li>
-            </ul>
-          </NCard>
+          <HelpPanel />
         </div>
 
-        <aside class="min-w-0 space-y-4" aria-label="用户与服务">
-          <NCard tag="section" aria-labelledby="profile-heading">
-            <h2 id="profile-heading" class="m-0 text-base font-semibold text-inherit">{{ homeProfile.name }}</h2>
-            <p class="mt-2 text-sm">ID：{{ homeProfile.id }}</p>
-          </NCard>
-
-          <NCard tag="section" aria-labelledby="work-orders-heading">
-            <h2 id="work-orders-heading" class="m-0 text-base font-medium text-inherit">我的工单</h2>
-            <div class="flex min-h-48 items-center justify-center lg:min-h-96">
-              <NEmpty description="暂无我的工单" />
-            </div>
-          </NCard>
-
-          <NCard tag="section" aria-labelledby="contact-heading">
-            <h2 id="contact-heading" class="m-0 text-lg font-medium text-inherit">{{ homeContact.title }}</h2>
-            <p class="mt-2 text-sm">{{ homeContact.description }}</p>
-          </NCard>
-        </aside>
+        <HomeSidebar />
       </div>
     </main>
   </div>
