@@ -38,7 +38,7 @@ async function toggleFullscreen() {
       <p class="m-0 text-base leading-snug font-semibold sm:text-lg">{{ homeProfile.systemName }}</p>
     </div>
 
-    <nav class="flex items-center gap-1 rounded-full bg-white px-2 py-1 dark:bg-[#1e2e4b]" aria-label="系统工具">
+    <nav class="flex items-center gap-3 rounded-full bg-white px-2 py-1 dark:bg-[#1e2e4b]" aria-label="系统工具">
       <NButton quaternary circle :disabled="!fullscreenSupported" :aria-label="fullscreen ? '退出全屏' : '进入全屏'" @click="toggleFullscreen">
         <template #icon>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
@@ -49,8 +49,8 @@ async function toggleFullscreen() {
       <NPopover trigger="click" placement="bottom-end">
         <template #trigger>
           <NButton quaternary circle :aria-label="`消息通知，${homeProfile.notificationCount} 条演示消息`">
-            <NBadge :value="homeProfile.notificationCount" :max="99">
-              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <NBadge :value="homeProfile.notificationCount" :max="99" :offset="[3, -4]" :theme-overrides="{ fontSize: '10px' }" class="[&_.n-badge-sup]:h-[14px]! [&_.n-badge-sup]:rounded-full [&_.n-badge-sup]:px-[3px]! [&_.n-badge-sup]:leading-[14px]!">
+              <svg class="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                 <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" />
               </svg>
             </NBadge>
@@ -58,9 +58,18 @@ async function toggleFullscreen() {
         </template>
         <p class="m-0 text-sm">消息通知为静态演示，暂无消息详情。</p>
       </NPopover>
-      <NSwitch :value="dark" aria-label="深色模式" @update:value="emit('update:dark', $event)">
-        <template #checked>深色</template>
-        <template #unchecked>浅色</template>
+      <NSwitch :value="dark" size="small" aria-label="深色模式" @update:value="emit('update:dark', $event)">
+        <template #checked>
+          <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M20 14a8 8 0 0 1-10-10 8 8 0 1 0 10 10Z" />
+          </svg>
+        </template>
+        <template #unchecked>
+          <svg class="size-3 text-slate-600 dark:text-slate-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2" />
+          </svg>
+        </template>
       </NSwitch>
       <NPopover trigger="click" placement="bottom-end">
         <template #trigger>
