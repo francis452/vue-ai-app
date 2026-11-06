@@ -19,11 +19,12 @@ beforeEach(() => {
 
 describe('App 主题配置', () => {
   it('使用中文组件及日期语言，跟随系统明暗变化', async () => {
-    const wrapper = mount(App, { global: { stubs: { ProductFilter: true } } })
+    const wrapper = mount(App, { global: { stubs: { Home: true } } })
     const provider = wrapper.getComponent(NConfigProvider)
     expect(provider.props('locale')).toBe(zhCN)
     expect(provider.props('dateLocale')).toBe(dateZhCN)
     expect(provider.props('theme')).toBeNull()
+    expect(wrapper.findComponent({ name: 'Home' }).exists()).toBe(true)
 
     osTheme.value = 'dark'
     await nextTick()
