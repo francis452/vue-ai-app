@@ -18,6 +18,16 @@ describe('能源管理首页', () => {
     expect(wrapper.text()).toContain('本地静态演示')
   })
 
+  it('锁定视口高度，页面自身不出现滚动条，高度约束可传递到内容模块', () => {
+    const wrapper = mount(Home, { props: { dark: false } })
+    const shell = wrapper.get('[data-testid="home-shell"]')
+    expect(shell.classes()).toEqual(expect.arrayContaining(['flex', 'h-dvh', 'flex-col', 'overflow-hidden']))
+    const main = wrapper.get('main')
+    expect(main.classes()).toEqual(expect.arrayContaining(['flex-1', 'min-h-0', 'overflow-y-auto', 'overscroll-contain']))
+    const grid = wrapper.get('[data-testid="home-grid"]')
+    expect(grid.classes()).toContain('lg:grid-rows-[minmax(0,1fr)_auto]')
+  })
+
   it('顶部栏主题操作传递给首页，并反映父级主题状态', async () => {
     const wrapper = mount(Home, { props: { dark: false } })
     await wrapper.get('[role="switch"]').trigger('click')

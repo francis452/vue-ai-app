@@ -38,4 +38,16 @@ describe('ApplicationPanel', () => {
     expect(wrapper.getComponent(NModal).props('title')).toBe('运营驾驶舱')
     expect(wrapper.getComponent(NModal).props('show')).toBe(true)
   })
+
+  it('业务应用与数字底座作为一个整体局部垂直滚动', () => {
+    const wrapper = mount(ApplicationPanel)
+    const scroller = wrapper.get('[data-testid="application-groups-scroll"]')
+    expect(scroller.attributes('role')).toBe('region')
+    expect(scroller.attributes('tabindex')).toBe('0')
+    expect(scroller.classes()).toEqual(expect.arrayContaining(['flex-1', 'min-h-0', 'overflow-y-auto', 'overscroll-contain']))
+    const groups = scroller.findAll('section')
+    expect(groups.map(group => group.attributes('aria-labelledby'))).toEqual(['business-heading', 'platform-heading'])
+    expect(scroller.text()).toContain('业务应用')
+    expect(scroller.text()).toContain('数字底座')
+  })
 })

@@ -14,9 +14,9 @@ const selected = ref<{ title: string; description: string } | null>(null)
 </script>
 
 <template>
-  <NCard tag="section" aria-labelledby="applications-heading">
+  <NCard tag="section" class="flex min-h-0 flex-col" content-class="flex min-h-0 flex-1 flex-col gap-5" aria-labelledby="applications-heading">
     <h2 id="applications-heading" class="sr-only">应用中心</h2>
-    <section class="relative isolate flex min-h-20 items-center justify-center overflow-hidden rounded-lg border border-blue-300/30 bg-blue-100/60 px-3 py-2" aria-labelledby="cockpit-heading">
+    <section class="relative isolate flex min-h-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-blue-300/30 bg-blue-100/60 px-3 py-2" aria-labelledby="cockpit-heading">
       <img :src="cockpitBanner" alt="" class="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-80" />
       <div class="max-w-full rounded-lg bg-white/70 px-3 py-2 text-slate-800 sm:bg-white/40">
         <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
@@ -27,14 +27,22 @@ const selected = ref<{ title: string; description: string } | null>(null)
       </div>
     </section>
 
-    <section v-for="group in groups" :key="group.id" class="mt-6" :aria-labelledby="`${group.id}-heading`">
-      <h3 :id="`${group.id}-heading`" class="m-0 mb-3 text-sm font-semibold">{{ group.title }}</h3>
-      <ul class="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-4 p-0">
-        <li v-for="entry in group.entries" :key="entry.id" class="min-w-0">
-          <AppEntryCard :entry="entry" @select="selected = $event" />
-        </li>
-      </ul>
-    </section>
+    <div
+      data-testid="application-groups-scroll"
+      role="region"
+      aria-label="应用入口列表"
+      tabindex="0"
+      class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto overscroll-contain rounded-sm pr-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-300"
+    >
+      <section v-for="group in groups" :key="group.id" :aria-labelledby="`${group.id}-heading`">
+        <h3 :id="`${group.id}-heading`" class="m-0 mb-3 text-sm font-semibold">{{ group.title }}</h3>
+        <ul class="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-4 p-0">
+          <li v-for="entry in group.entries" :key="entry.id" class="min-w-0">
+            <AppEntryCard :entry="entry" @select="selected = $event" />
+          </li>
+        </ul>
+      </section>
+    </div>
 
     <NModal :show="!!selected" preset="card" :title="selected?.title" class="w-[90vw]! max-w-lg" @update:show="show => { if (!show) selected = null }">
       <p class="m-0">{{ selected?.description }}</p>
