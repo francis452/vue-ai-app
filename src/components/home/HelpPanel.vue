@@ -4,6 +4,18 @@ import { NButton, NCard, NModal, NPopover } from 'naive-ui'
 import { helpDocuments } from '../../data/home'
 
 const selected = ref<typeof helpDocuments[number] | null>(null)
+const activeHelpKey = ref<string | null>(null)
+
+function revealTruncatedTitle(group: number, document: typeof helpDocuments[number], event: MouseEvent) {
+  const target = event.currentTarget
+  activeHelpKey.value = target instanceof HTMLElement && target.scrollWidth > target.clientWidth
+    ? `${group}-${document.id}`
+    : null
+}
+
+function hideHelpPopover() {
+  activeHelpKey.value = null
+}
 </script>
 
 <template>
@@ -12,9 +24,9 @@ const selected = ref<typeof helpDocuments[number] | null>(null)
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       <ul v-for="group in 3" :key="group" class="m-0 list-none space-y-1 rounded-lg bg-white p-3 dark:bg-[#1e2e4b]" :aria-label="`新手文档第 ${group} 组`">
         <li v-for="document in helpDocuments" :key="document.id" class="min-w-0">
-          <NPopover trigger="hover" placement="top" :delay="0">
+          <NPopover :show="activeHelpKey === `${group}-${document.id}`" placement="top" :duration="0">
             <template #trigger>
-              <button type="button" class="cursor-pointer min-h-11 w-full truncate rounded-sm text-left text-xs leading-5 text-inherit hover:text-blue-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:hover:text-blue-200 dark:focus-visible:outline-blue-300 md:min-h-8" @click="selected = document">{{ document.title }}</button>
+              <button type="button" class="cursor-pointer min-h-11 w-full truncate rounded-sm text-left text-xs leading-5 text-inherit hover:text-blue-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:hover:text-blue-200 dark:focus-visible:outline-blue-300 md:min-h-8" @click="selected = document" @mouseenter="revealTruncatedTitle(group, document, $event)" @mouseleave="hideHelpPopover">{{ document.title }}</button>
             </template>
             <span class="block max-w-72 text-xs leading-5 wrap-anywhere">{{ document.title }}</span>
           </NPopover>
